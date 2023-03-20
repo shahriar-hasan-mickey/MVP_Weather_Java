@@ -14,6 +14,8 @@ import java.util.List;
 import humble.slave.mvp_weather_java.R;
 import humble.slave.mvp_weather_java.common.RequestCompleteListener;
 import humble.slave.mvp_weather_java.databinding.ActivityMainBinding;
+import humble.slave.mvp_weather_java.model.WeatherInfoModel;
+import humble.slave.mvp_weather_java.model.WeatherInfoModelImpl;
 import humble.slave.mvp_weather_java.model.data.City;
 import humble.slave.mvp_weather_java.model.data.WeatherDataModel;
 import humble.slave.mvp_weather_java.model.data.WeatherInfoResponse;
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView{
     ActivityMainBinding binding;
     List<City> cityList;
     WeatherInfoShowPresenter presenter;
-
+    WeatherInfoModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,18 +35,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityView{
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        presenter = new WeatherInfoShowPresenterImpl(getApplicationContext());
-        presenter.fetchCityList(new RequestCompleteListener<List<City>>() {
-            @Override
-            public void onRequestSuccess(List<City> data) {
-                onCityListFetchSuccess(data);
-            }
-
-            @Override
-            public void onRequestFailed(String errorMessage) {
-                onCityListFetchFailure(errorMessage);
-            }
-        });
+        model = new WeatherInfoModelImpl(getApplicationContext());
+        presenter = new WeatherInfoShowPresenterImpl(this, model);
+        presenter.fetchCityList();
 
 
 
@@ -52,17 +45,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView{
             @Override
             public void onClick(View view) {
                 binding.outputGroup.setVisibility(View.GONE);
-                presenter.fetchWeatherInfo(cityList.get(binding.layoutInput.spinner.getSelectedItemPosition()).getId(), new RequestCompleteListener<WeatherDataModel>() {
-                    @Override
-                    public void onRequestSuccess(WeatherDataModel data) {
-                        onWeatherInfoFetchSuccess(data);
-                    }
-
-                    @Override
-                    public void onRequestFailed(String errorMessage) {
-                        onWeatherInfoFetchFailure(errorMessage);
-                    }
-                });
+                presenter.fetchWeatherInfo(cityList.get(binding.layoutInput.spinner.getSelectedItemPosition()).getId());
             }
         });
     }
