@@ -86,7 +86,7 @@ public class WeatherInfoModelImpl implements WeatherInfoModel{
 
         call.enqueue(new Callback<WeatherInfoResponse>() {
             @Override
-            public void onResponse(Call<WeatherInfoResponse> call, @NonNull Response<WeatherInfoResponse> response) {
+            public void onResponse(@NonNull Call<WeatherInfoResponse> call, @NonNull Response<WeatherInfoResponse> response) {
                 if(response.body() != null){
                     Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show();
                     callback.onRequestSuccess(response.body());
@@ -97,7 +97,7 @@ public class WeatherInfoModelImpl implements WeatherInfoModel{
             }
 
             @Override
-            public void onFailure(@NonNull Call<WeatherInfoResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<WeatherInfoResponse> call, @NonNull Throwable t) {
                 Toast.makeText(context, "FAILED", Toast.LENGTH_SHORT).show();
                 callback.onRequestFailed(t.getLocalizedMessage());
             }

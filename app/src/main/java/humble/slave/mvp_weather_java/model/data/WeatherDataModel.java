@@ -10,7 +10,7 @@ public class WeatherDataModel {
     String pressure = "";
     String visibility = "";
     String sunrise = "";
-    String suns = "";
+    String sunset = "";
 
 
 
@@ -86,11 +86,11 @@ public class WeatherDataModel {
         this.sunrise = sunrise;
     }
 
-    public String getSuns() {
-        return suns;
+    public String getSunset() {
+        return sunset;
     }
 
-    public void setSuns(String suns) {
-        this.suns = suns;
+    public void setSunset(String sunset) {
+        this.sunset = sunset;
     }
 }

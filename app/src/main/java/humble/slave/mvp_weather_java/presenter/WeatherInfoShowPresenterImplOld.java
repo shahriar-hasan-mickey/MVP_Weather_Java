@@ -2,7 +2,6 @@ package humble.slave.mvp_weather_java.presenter;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 
 import java.util.List;
 

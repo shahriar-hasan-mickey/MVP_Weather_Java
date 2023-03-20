@@ -1,24 +1,23 @@
 package humble.slave.mvp_weather_java.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import humble.slave.mvp_weather_java.R;
-import humble.slave.mvp_weather_java.common.RequestCompleteListener;
 import humble.slave.mvp_weather_java.databinding.ActivityMainBinding;
 import humble.slave.mvp_weather_java.model.WeatherInfoModel;
 import humble.slave.mvp_weather_java.model.WeatherInfoModelImpl;
 import humble.slave.mvp_weather_java.model.data.City;
 import humble.slave.mvp_weather_java.model.data.WeatherDataModel;
-import humble.slave.mvp_weather_java.model.data.WeatherInfoResponse;
 import humble.slave.mvp_weather_java.presenter.WeatherInfoShowPresenter;
 import humble.slave.mvp_weather_java.presenter.WeatherInfoShowPresenterImpl;
 
@@ -41,12 +40,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityView{
 
 
 
-        binding.layoutInput.btnViewWeather.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.outputGroup.setVisibility(View.GONE);
-                presenter.fetchWeatherInfo(cityList.get(binding.layoutInput.spinner.getSelectedItemPosition()).getId());
-            }
+        binding.layoutInput.btnViewWeather.setOnClickListener(view -> {
+            binding.outputGroup.setVisibility(View.GONE);
+            presenter.fetchWeatherInfo(cityList.get(binding.layoutInput.spinner.getSelectedItemPosition()).getId());
         });
     }
 
@@ -81,10 +77,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityView{
         binding.outputGroup.setVisibility(View.VISIBLE);
         binding.tvErrorMessage.setVisibility(View.GONE);
 
+        binding.layoutWeatherBasic.tvDateTime.setText(weatherDataModel.getDateTime());
         binding.layoutWeatherBasic.tvTemperature.setText(weatherDataModel.getTemperature());
+        binding.layoutWeatherBasic.tvCityCountry.setText(weatherDataModel.getCityAndCountry());
+        Glide.with(this).load(weatherDataModel.getWeatherConditionIconUrl()).into(binding.layoutWeatherBasic.ivWeatherCondition);
+        binding.layoutWeatherBasic.tvWeatherCondition.setText(weatherDataModel.getWeatherConditionIconDescription());
+
         binding.layoutWeatherAdditional.tvHumidityValue.setText(weatherDataModel.getHumidity());
         binding.layoutWeatherAdditional.tvPressureValue.setText(weatherDataModel.getPressure());
         binding.layoutWeatherAdditional.tvVisibilityValue.setText(weatherDataModel.getVisibility());
+
+        binding.layoutSunsetSunrise.tvSunriseTime.setText(weatherDataModel.getSunrise());
+        binding.layoutSunsetSunrise.tvSunsetTime.setText(weatherDataModel.getSunset());
 
     }
 
@@ -96,10 +100,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityView{
     }
 
 
+    @Override
+    protected void onDestroy() {
+        presenter.detachView();
+        super.onDestroy();
 
+    }
 
-
-// TODO : CONVERT-TO-CITY-NAME-LIST
+    // TODO : CONVERT-TO-CITY-NAME-LIST
     private List<String> convertToCityNameList(List<City> city_list){
 
         List<String> cityNameList = new ArrayList<>();
